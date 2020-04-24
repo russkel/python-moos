@@ -1,4 +1,4 @@
-python-moos
+python-moos test
 ===========
 python bindings for [MOOS](https://github.com/themoos/core-moos)
 
