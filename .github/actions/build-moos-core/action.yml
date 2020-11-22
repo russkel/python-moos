@@ -1,0 +1,54 @@
+name: 'Build MOOS core'
+description: 'Builds MOOS core static libraries from sourcecode'
+# inputs:
+#   who-to-greet:  # id of input
+#     description: 'Who to greet'
+#     required: true
+#     default: 'World'
+# outputs:
+#   random-number: 
+#     description: "Random number"
+#     value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout MOOS source
+      uses: actions/checkout@v2
+      with:
+        repository: 'https://github.com/themoos/core-moos'
+
+        # The branch, tag or SHA to checkout. When checking out the repository that
+        # triggered a workflow, this defaults to the reference or SHA for that event.
+        # Otherwise, uses the default branch.
+        # ref: ''
+
+        # Relative path under $GITHUB_WORKSPACE to place the repository
+        path: 'core-moos'
+
+    - name: 'Run CMake'
+      uses: lukka/run-cmake@v3
+      with:
+        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        cmakeListsTxtPath: '${{ github.workspace }}/core-moos/CMakeLists.txt'
+        buildDirectory: '${{ github.workspace }}/moos-core/build'
+        cmakeAppendedArgs: ' -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release' # -GNinja 
+
+      
+    # - run: echo Hello ${{ inputs.who-to-greet }}.
+    #   shell: bash
+    # - id: random-number-generator
+    #   run: echo "::set-output name=random-id::$(echo $RANDOM)"
+    #   shell: bash
+
+    #       - if [ "`uname`" != "Darwin" ] ; then export MOOS_CXX_FLAGS="-fPIC -Wno-long-long"; fi
+    # - if [ "`uname`" != "Darwin" ] ; then export CXX="g++-4.8"; fi
+    # - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export CXX=g++-4.8 CC=gcc-4.8; fi
+    # - |
+    #   cd ..
+    #   cd core-moos
+    #   mkdir build
+    #   cd build
+    #   cmake -DENABLE_EXPORT=ON -DUSE_ASYNC_COMMS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=$MOOS_CXX_FLAGS ..
+    #   cmake --build . --config Release --config -j4
+    #   sudo cmake --build . --config Release --target install
+    #   cd $TRAVIS_BUILD_DIR

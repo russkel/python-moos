@@ -43,6 +43,9 @@ jobs:
         echo "DISTUTILS_USE_SDK=1" >> $GITHUB_ENV
         echo "MSSdk=1" >> $GITHUB_ENV
 
+    - name: Build MOOS
+      uses: build-moos-core
+
     - name: Build and install
       run: pip install --verbose .
 

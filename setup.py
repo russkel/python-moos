@@ -24,7 +24,6 @@ setup(
     description='MOOS python wrapper.',
     long_description='',
     url="https://github.com/russkel/python-moos",
-    long_description="",
     ext_modules=ext_modules,
     extras_require={"test": "pytest"},
     cmdclass={"build_ext": build_ext},
