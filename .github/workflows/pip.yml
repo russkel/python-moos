@@ -5,14 +5,14 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - ci-actions
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-latest]
+        platform: [macos-latest, ubuntu-latest] # windows-latest,
         python-version: ["2.7", "3.5", "3.8", "3.9"]
 
     runs-on: ${{ matrix.platform }}
