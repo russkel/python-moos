@@ -346,7 +346,7 @@ class pyMOOSTestCase(unittest.TestCase):
         self.assertTrue(c.notify('TEST_ONQUEUE_VAR2', 3))
         self.assertTrue(c.notify('TEST_ONQUEUE2_VAR', 4))
 
-        time.sleep(1)
+        time.sleep(5)
 
         self.assertTrue(self.received_mail)
         self.assertTrue(self.received_mail_q_v1)
