@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - ci-actions
+      - oviquezr-patch-1
 
 jobs:
   build:
