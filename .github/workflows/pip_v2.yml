@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        path: 'main' 
+        path: 'python-moos' 
 
     - uses: actions/setup-python@v2
       with:
@@ -60,11 +60,11 @@ jobs:
         buildDirectory: '${{ github.workspace }}/core-moos/build'
         cmakeAppendedArgs: ' -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release' # -GNinja 
 
-    - name: Build MOOS
-      uses: ./.github/actions/build-moos-core
+    # - name: Build MOOS
+    #   uses: ./.github/actions/build-moos-core
 
     - name: Build and install
-      run: pip install --verbose .
+      run: pip install --verbose ${{ github.workspace }}/python-moos
 
     - name: Test
       run: python tests/test.py
