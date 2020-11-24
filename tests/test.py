@@ -328,10 +328,15 @@ class pyMOOSTestCase(unittest.TestCase):
         c.add_message_route_to_active_queue('queue1', 'TEST_ONQUEUE_VAR2')
         c.add_active_queue('queue2', queue2)
         c.add_message_route_to_active_queue('queue2', 'TEST_ONQUEUE2_VAR')
+
+        self.assertTrue(c.has_active_queue('queue1'))
+        self.assertTrue(c.has_active_queue('queue2'))
+        c.print_message_to_active_queue_routing()
+
         c.run('localhost', 9000, 'test_on_mail_active_queues')
         c.wait_until_connected(5000)
 
-        time.sleep(1)
+        time.sleep(2)
 
         self.assertTrue(c.is_registered_for('TEST_ONMAIL_ACTIVE_Q'))
         self.assertTrue(c.is_registered_for('TEST_ONQUEUE_VAR1'))
