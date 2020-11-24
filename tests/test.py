@@ -336,7 +336,7 @@ class pyMOOSTestCase(unittest.TestCase):
         c.run('localhost', 9000, 'test_on_mail_active_queues')
         c.wait_until_connected(5000)
 
-        time.sleep(2)
+        time.sleep(1)
 
         self.assertTrue(c.is_registered_for('TEST_ONMAIL_ACTIVE_Q'))
         self.assertTrue(c.is_registered_for('TEST_ONQUEUE_VAR1'))
@@ -347,11 +347,14 @@ class pyMOOSTestCase(unittest.TestCase):
         self.assertFalse(self.received_mail_q_v2)
         self.assertFalse(self.received_mail_q2_v)
         self.assertTrue(c.notify('TEST_ONMAIL_ACTIVE_Q', 1))
+
+        time.sleep(1)
+
         self.assertTrue(c.notify('TEST_ONQUEUE_VAR1', 2))
         self.assertTrue(c.notify('TEST_ONQUEUE_VAR2', 3))
         self.assertTrue(c.notify('TEST_ONQUEUE2_VAR', 4))
 
-        time.sleep(5)
+        time.sleep(1)
 
         self.assertTrue(self.received_mail)
         self.assertTrue(self.received_mail_q_v1)
