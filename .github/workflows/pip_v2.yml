@@ -64,7 +64,12 @@ jobs:
     #   uses: ./.github/actions/build-moos-core
 
     - name: Build and install
-      run: pip install --verbose ${{ github.workspace }}/python-moos
+      run: |
+        echo $pwd
+        echo ${{ github.workspace }}/core-moos
+        echo ${{ github.workspace }}/python-moos
+        find . -iname "MOOSMsg.h"
+        pip install --verbose ${{ github.workspace }}/python-moos
 
     - name: Test
       run: python tests/test.py
