@@ -49,7 +49,7 @@ jobs:
     - name: Checkout MOOS source
       uses: actions/checkout@v2
       with:
-        repository: 'https://github.com/themoos/core-moos' 
+        repository: 'themoos/core-moos' 
         path: 'core-moos'
         
     - name: 'Run CMake'
