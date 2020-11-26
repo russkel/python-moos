@@ -51,7 +51,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'themoos/core-moos'
-        path: 'core-moos'
+        path: '${{ github.workspace }}/core-moos'
 
     - name: 'Run CMake'
       uses: lukka/run-cmake@v3
@@ -61,13 +61,12 @@ jobs:
         buildDirectory: '${{ github.workspace }}/core-moos/build'
         cmakeBuildType: 'Release'
         buildWithCMake: true
-        # buildWithCMakeArgs: ''
-        cmakeAppendedArgs: ' -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON'
+        cmakeAppendedArgs: '-DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON'
 
     - name: Install MOOS
       run: |
         cd ${{ github.workspace }}/core-moos/build
-        cmake --install
+        cmake --install . --prefix ${{ github.workspace }}
 
     - name: Debug prints
       run: |
