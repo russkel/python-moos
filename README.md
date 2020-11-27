@@ -1,6 +1,6 @@
 python-moos
 ===========
-Python (2.7 and 3) bindings for [MOOS](https://github.com/themoos/core-moos).
+Python (2.7 and 3) bindings for MOOS.
 
 |      CI              | status |
 |----------------------|--------|
@@ -24,16 +24,17 @@ python -m pip install pymoos
 ```
 
 # Build Instructions
+To compile pymoos you will need [MOOS](https://github.com/themoos/core-moos) compiled and installed as well as Python and pip.
+
 Clone the repository:
 
 ```
 git clone https://github.com/russkel/python-moos.git python-moos
 ```
 
-Build and install python-moos:
+Build and install pymoos:
 
 ```
 cd python-moos
-python setup.py build
-python setup.py install
+python -m pip install .
 ```

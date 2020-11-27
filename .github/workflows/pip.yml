@@ -76,7 +76,7 @@ jobs:
         find .
 
     - name: Build and install
-      run: pip install --verbose --install-options="--include-dirs=${{ github.workspace }}/include" .
+      run: pip install --verbose --install-option="--include-dirs=${{ github.workspace }}/include" .
 
     - name: Test
       run: python tests/test.py
