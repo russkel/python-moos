@@ -67,16 +67,24 @@ jobs:
       run: |
         cd ${{ github.workspace }}/core-moos/build
         cmake --install . --prefix ${{ github.workspace }}
+        echo "C_INCLUDE_PATH=${{ github.workspace }}/include" >> $GITHUB_ENV 
         echo "LIBRARY_PATH=${{ github.workspace }}/lib" >> $GITHUB_ENV
         echo "PATH=$PATH:${{ github.workspace }}/bin" >> $GITHUB_ENV
 
-    - name: Debug prints
-      run: |
-        echo $(pwd)
-        find .
+    # - name: Debug prints
+    #   run: |
+    #     echo "$(pwd)"
+    #     find .
+
+    # - name: Create setup.cfg
+    #   run: |
+    #     echo "[build_ext]" >> setup.cfg
+    #     echo "include_dirs=${{ github.workspace }}/include" >> setup.cfg
+    #     echo "library_dirs=${{ github.workspace }}/lib" >> setup.cfg
+          # cat setup.cfg
 
     - name: Build and install
-      run: pip install --verbose --global-option="-I${{ github.workspace }}/include" .
+      run: pip install --verbose --no-build-isolation --global-option="-I${{ github.workspace }}/include" .
 
     - name: Test
       run: python tests/test.py
