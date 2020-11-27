@@ -3,9 +3,9 @@ name: Wheels
 on:
   workflow_dispatch:
   pull_request:
-  # push:
-  #   branches:
-  #    - ci-actions
+  push:
+    branches:
+     - ci-actions
   release:
     types:
       - published
@@ -24,9 +24,6 @@ jobs:
 
     - name: Install deps
       run: python -m pip install twine build
-
-    - name: Build MOOS
-      uses: ./.github/actions/build-moos-core
 
     - name: Build SDist
       run: python -m build -s
@@ -57,6 +54,34 @@ jobs:
 
     # - name: Build MOOS
     #   uses: ./.github/actions/build-moos-core
+    - name: Checkout MOOS source
+      uses: actions/checkout@v2
+      with:
+        repository: 'themoos/core-moos'
+        path: '${{ github.workspace }}/../core-moos'
+
+    - name: 'Run CMake'
+      uses: lukka/run-cmake@v3
+      with:
+        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        cmakeListsTxtPath: '${{ github.workspace }}/../core-moos/CMakeLists.txt'
+        buildDirectory: '${{ github.workspace }}/../core-moos/build'
+        cmakeBuildType: 'Release'
+        buildWithCMake: true
+        cmakeAppendedArgs: '-DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON'
+
+    - name: Install MOOS
+      run: |
+        cd ${{ github.workspace }}/core-moos/build
+        cmake --install . --prefix ${{ github.workspace }}/../
+        echo "PATH=$PATH:${{ github.workspace }}/../bin" >> $GITHUB_ENV
+
+    - name: Create setup.cfg
+      run: |
+        echo "[build_ext]" >> setup.cfg
+        echo "include_dirs=${{ github.workspace }}/../include" >> setup.cfg
+        echo "library_dirs=${{ github.workspace }}/../lib" >> setup.cfg
+        cat setup.cfg
 
     - name: Build wheel
       run: python -m cibuildwheel --output-dir wheelhouse
