@@ -11,8 +11,8 @@ __version__ = "2020.1"
 ext_modules = [
     Pybind11Extension("pymoos",
         ["src/pyMOOS.cpp"],
-        # Example: passing in the version to the compiled code
-        define_macros = [('VERSION_INFO', __version__)],
+        libraries=["MOOS"],
+        define_macros=[('VERSION_INFO', __version__)],
         ),
 ]
 
@@ -21,7 +21,7 @@ setup(
     version=__version__,
     author='Mohamed Saad Ibn Seddik',
     author_email='ms.ibnseddik@gmail.com',
-    description='MOOS python wrapper.',
+    description='MOOS Python Wrapper.',
     long_description='',
     url="https://github.com/russkel/python-moos",
     ext_modules=ext_modules,

@@ -1,11 +1,10 @@
-name: Pip
+name: Pipv2
 
 on:
   workflow_dispatch:
   pull_request:
   push:
     branches:
-      - ci-actions
       - oviquezr-patch-1
 
 jobs:
