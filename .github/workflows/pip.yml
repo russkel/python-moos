@@ -51,14 +51,14 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'themoos/core-moos'
-        path: '${{ github.workspace }}/../core-moos'
+        path: '${{ github.workspace }}/core-moos'
 
     - name: 'Run CMake'
       uses: lukka/run-cmake@v3
       with:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-        cmakeListsTxtPath: '${{ github.workspace }}/../core-moos/CMakeLists.txt'
-        buildDirectory: '${{ github.workspace }}/../core-moos/build'
+        cmakeListsTxtPath: '${{ github.workspace }}/core-moos/CMakeLists.txt'
+        buildDirectory: '${{ github.workspace }}/core-moos/build'
         cmakeBuildType: 'Release'
         buildWithCMake: true
         cmakeAppendedArgs: '-DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON'
@@ -66,14 +66,14 @@ jobs:
     - name: Install MOOS
       run: |
         cd ${{ github.workspace }}/core-moos/build
-        cmake --install . --prefix ${{ github.workspace }}/../
-        echo "PATH=$PATH:${{ github.workspace }}/../bin" >> $GITHUB_ENV
+        cmake --install . --prefix ${{ github.workspace }}/.local
+        echo "PATH=$PATH:${{ github.workspace }}/.local/bin" >> $GITHUB_ENV
 
     - name: Create setup.cfg
       run: |
         echo "[build_ext]" >> setup.cfg
-        echo "include_dirs=${{ github.workspace }}/../include" >> setup.cfg
-        echo "library_dirs=${{ github.workspace }}/../lib" >> setup.cfg
+        echo "include_dirs=${{ github.workspace }}/.local/include" >> setup.cfg
+        echo "library_dirs=${{ github.workspace }}/.local/lib" >> setup.cfg
         cat setup.cfg
 
     - name: Build and install
