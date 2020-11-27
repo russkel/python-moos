@@ -67,6 +67,9 @@ jobs:
       run: |
         cd ${{ github.workspace }}/core-moos/build
         cmake --install . --prefix ${{ github.workspace }}
+        echo "C_INCLUDE_PATH=${{ github.workspace }}/include" >> $GITHUB_ENV
+        echo "LIBRARY_PATH=${{ github.workspace }}/lib" >> $GITHUB_ENV
+        echo "PATH=$PATH:${{ github.workspace }}/bin" >> $GITHUB_ENV
 
     - name: Debug prints
       run: |
@@ -74,7 +77,7 @@ jobs:
         find .
 
     - name: Build and install
-      run: pip install --verbose --install-option="--include_dirs ${{ github.workspace }}/include --library_dirs ${{ github.workspace }}/lib" .
+      run: pip install --verbose .
 
     - name: Test
       run: python tests/test.py
