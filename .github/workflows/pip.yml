@@ -70,11 +70,11 @@ jobs:
 
     - name: Debug prints
       run: |
-        echo $pwd
-        echo find .
+        echo $(pwd)
+        find .
 
     - name: Build and install
-      run: pip install --verbose .
+      run: pip install --verbose --install-option="--include_dirs ${{ github.workspace }}/include --library_dirs ${{ github.workspace }}/lib" .
 
     - name: Test
       run: python tests/test.py
