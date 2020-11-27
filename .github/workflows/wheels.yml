@@ -76,7 +76,17 @@ jobs:
         cmake --install . --prefix ${{ github.workspace }}/.local/
         echo "PATH=$PATH:${{ github.workspace }}/.local/bin" >> $GITHUB_ENV
 
+    # linux cibuildwheel uses a docker image - it maps workspace to /project
     - name: Create setup.cfg
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        echo "[build_ext]" >> setup.cfg
+        echo "include_dirs=/project/.local/include" >> setup.cfg
+        echo "library_dirs=/project/.local/lib" >> setup.cfg
+        cat setup.cfg
+
+    - name: Create setup.cfg
+      if: matrix.os == 'macos-latest'
       run: |
         echo "[build_ext]" >> setup.cfg
         echo "include_dirs=${{ github.workspace }}/.local/include" >> setup.cfg
