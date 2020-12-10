@@ -99,6 +99,7 @@ jobs:
         # Python 2.7 on Windows requires a workaround for C++11 support,
         # built separately below
         CIBW_SKIP: cp27-win*
+        CIBW_BEFORE_TEST: if [ -d wheelhouse ]; then ls -lh wheelhouse; else echo ">>> No wheelhouse found!!"; fi
 
     - name: Show files
       run: ls -lh wheelhouse
