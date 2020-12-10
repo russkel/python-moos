@@ -105,6 +105,8 @@ jobs:
           rm -rf /project/core-moos/build/*;
           rm -rf /project/.local/*;
           cd /project/core-moos/build;
+          cmake ..;
+          make;
           cmake --install . --prefix /project/.local/;
           cd;
 
