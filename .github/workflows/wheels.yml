@@ -94,6 +94,7 @@ jobs:
         cat setup.cfg
 
     - name: Build wheel
+      if: matrix.os == 'ubuntu-latest'
       run: python -m cibuildwheel --output-dir wheelhouse
       env:
         # Python 2.7 on Windows requires a workaround for C++11 support,
@@ -101,8 +102,18 @@ jobs:
         # > skipping Python2.7 entirely
         CIBW_SKIP: cp27-*
         CIBW_BEFORE_TEST: |
-          cd ${{ github.workspace }}/core-moos/build
-          cmake --install . --prefix ${{ github.workspace }}/.local/
+          cd /project/core-moos/build
+          cmake --install . --prefix /project/.local/
+          cd
+
+    - name: Build wheel
+      if: matrix.os == 'macos-latest'
+      run: python -m cibuildwheel --output-dir wheelhouse
+      env:
+        # Python 2.7 on Windows requires a workaround for C++11 support,
+        # built separately below
+        # > skipping Python2.7 entirely
+        CIBW_SKIP: cp27-*
 
     - name: Show files
       run: ls -lh wheelhouse
