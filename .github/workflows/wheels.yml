@@ -101,7 +101,7 @@ jobs:
         # built separately below
         # > skipping Python2.7 entirely
         CIBW_SKIP: cp27-*
-        CIBW_BEFORE_TEST: |
+        CIBW_BEFORE_BUILD: |
           rm -rf /project/core-moos/build/*;
           rm -rf /project/.local/*;
           cd /project/core-moos/build;
