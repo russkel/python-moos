@@ -102,10 +102,11 @@ jobs:
         # > skipping Python2.7 entirely
         CIBW_SKIP: cp27-*
         CIBW_BEFORE_TEST: |
-          rm /project/core-moos/build/CMakeCache.txt
-          cd /project/core-moos/build
-          cmake --install . --prefix /project/.local/
-          cd
+          rm -rf /project/core-moos/build/*;
+          rm -rf /project/.local/*;
+          cd /project/core-moos/build;
+          cmake --install . --prefix /project/.local/;
+          cd;
 
     - name: Build wheel
       if: matrix.os == 'macos-latest'
