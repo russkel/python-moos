@@ -104,11 +104,12 @@ jobs:
         CIBW_BEFORE_BUILD: |
           rm -rf /project/core-moos/build/*;
           rm -rf /project/.local/*;
-          cd /project/core-moos/build;
+          pushd /project/core-moos/build >& /dev/null;
           cmake ..;
           make;
           cmake --install . --prefix /project/.local/;
-          cd;
+          popd >& /dev/null;
+          ls -lh /project/.local/;
 
     - name: Build wheel
       if: matrix.os == 'macos-latest'
