@@ -86,7 +86,15 @@ jobs:
         echo "library_dirs=${{ github.workspace }}/.local/lib" >> setup.cfg
         cat setup.cfg
 
-    - name: Build wheel
+    - name: Create setup.cfg
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        echo "[build_ext]" >> setup.cfg
+        echo "include_dirs=/project/.local/include" >> setup.cfg
+        echo "library_dirs=/project/moosbuild/lib" >> setup.cfg
+        cat setup.cfg
+
+- name: Build wheel
       if: matrix.os == 'ubuntu-latest'
       run: python -m cibuildwheel --output-dir wheelhouse
       env:
@@ -95,21 +103,11 @@ jobs:
         # > skipping Python2.7 entirely
         CIBW_SKIP: cp27-*
         CIBW_BEFORE_ALL: |
-          mkdir mooslocal
           mkdir moosbuild
           pushd moosbuild >& /dev/null;
-          cmake /project/core-moos/;
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON /project/core-moos/;
           make;
-          cmake --install . --prefix ../mooslocal/;
           popd >& /dev/null;
-          echo "moosbuild contents:"
-          ls -lh moosbuild/;
-          echo "mooslocal contents:"
-          ls -lh mooslocal/;
-          echo "[build_ext]" >> setup.cfg
-          echo "include_dirs=$(pwd)/mooslocal/include" >> setup.cfg
-          echo "library_dirs=$(pwd)/mooslocal/lib" >> setup.cfg
-          cat setup.cfg
 
     - name: Build wheel
       if: matrix.os == 'macos-latest'
