@@ -95,19 +95,20 @@ jobs:
         # > skipping Python2.7 entirely
         CIBW_SKIP: cp27-*
         CIBW_BEFORE_ALL: |
-          rm -rf /project/core-moos/build/*;
-          rm -rf /project/.local/*;
-          mkdir .local
-          mkdir build
-          pushd build >& /dev/null;
+          mkdir mooslocal
+          mkdir moosbuild
+          pushd moosbuild >& /dev/null;
           cmake /project/core-moos/;
           make;
-          cmake --install . --prefix ../.local/;
+          cmake --install . --prefix ../mooslocal/;
           popd >& /dev/null;
-          ls -lh .local/;
+          echo "moosbuild contents:"
+          ls -lh moosbuild/;
+          echo "mooslocal contents:"
+          ls -lh mooslocal/;
           echo "[build_ext]" >> setup.cfg
-          echo "include_dirs=.local/include" >> setup.cfg
-          echo "library_dirs=.local/lib" >> setup.cfg
+          echo "include_dirs=$(pwd)/mooslocal/include" >> setup.cfg
+          echo "library_dirs=$(pwd)/mooslocal/lib" >> setup.cfg
           cat setup.cfg
 
     - name: Build wheel
