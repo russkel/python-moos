@@ -108,6 +108,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON /project/core-moos/;
           make;
           popd >& /dev/null;
+          export PATH+=/project/moosbuild/bin
 
     - name: Build wheel
       if: matrix.os == 'macos-latest'
