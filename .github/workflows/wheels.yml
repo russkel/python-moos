@@ -94,7 +94,7 @@ jobs:
         echo "library_dirs=/project/moosbuild/lib" >> setup.cfg
         cat setup.cfg
 
-- name: Build wheel
+    - name: Build wheel
       if: matrix.os == 'ubuntu-latest'
       run: python -m cibuildwheel --output-dir wheelhouse
       env:
