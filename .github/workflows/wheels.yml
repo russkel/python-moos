@@ -50,10 +50,8 @@ jobs:
     - uses: actions/setup-python@v2
 
     - name: Install cibuildwheel
-      run: python -m pip install cibuildwheel==1.6.3
+      run: python -m pip install cibuildwheel==1.7.1
 
-    # - name: Build MOOS
-    #   uses: ./.github/actions/build-moos-core
     - name: Checkout MOOS source
       uses: actions/checkout@v2
       with:
@@ -76,8 +74,6 @@ jobs:
         cmake --install . --prefix ${{ github.workspace }}/.local/
         echo "PATH=$PATH:${{ github.workspace }}/.local/bin" >> $GITHUB_ENV
 
-    # linux cibuildwheel uses a docker image - it maps workspace to /project
-        
     - name: Create setup.cfg
       if: matrix.os == 'macos-latest'
       run: |
@@ -86,6 +82,7 @@ jobs:
         echo "library_dirs=${{ github.workspace }}/.local/lib" >> setup.cfg
         cat setup.cfg
 
+    # linux cibuildwheel uses a docker image - it maps workspace to /project
     - name: Create setup.cfg
       if: matrix.os == 'ubuntu-latest'
       run: |
