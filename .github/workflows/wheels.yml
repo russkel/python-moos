@@ -98,9 +98,10 @@ jobs:
         # Python 2.7 on Windows requires a workaround for C++11 support,
         # built separately below
         # > skipping Python2.7 entirely
+        CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+        CIBW_MANYLINUX_I686_IMAGE: manylinux2014
         CIBW_SKIP: cp27-*
         CIBW_BEFORE_ALL: |
-          apt install cmake;
           mkdir moosbuild;
           pushd moosbuild >& /dev/null;
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON /project/core-moos/;
