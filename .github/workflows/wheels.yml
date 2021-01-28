@@ -100,7 +100,8 @@ jobs:
         # > skipping Python2.7 entirely
         CIBW_SKIP: cp27-*
         CIBW_BEFORE_ALL: |
-          mkdir moosbuild
+          apt install cmake;
+          mkdir moosbuild;
           pushd moosbuild >& /dev/null;
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON /project/core-moos/;
           make;
