@@ -18,14 +18,6 @@ PYBIND11_MAKE_OPAQUE(CommsStatusVector);
 
 namespace py = pybind11;
 
-class pyMOOSException : public std::exception {
-public:
-    explicit pyMOOSException(const char * m) : message{m} {}
-    virtual const char * what() const noexcept override {return message.c_str();}
-private:
-    std::string message = "";
-};
-
 namespace MOOS {
 
 /** this is a class which wraps MOOS::MOOSAsyncCommClient to provide
@@ -100,8 +92,7 @@ public:
             bResult = py::bool_(result);
         } catch (const py::error_already_set& e) {
             py::gil_scoped_release release;
-            throw pyMOOSException(
-                  "OnConnect:: caught an exception thrown in python callback");
+            throw;
         }
 
         py::gil_scoped_release release;
@@ -133,8 +124,7 @@ public:
             }
         } catch (const py::error_already_set& e) {
             py::gil_scoped_release release;
-            throw pyMOOSException(
-                      "OnMail:: caught an exception thrown in python callback");
+            throw;
         }
 
         py::gil_scoped_release release;
@@ -182,7 +172,7 @@ public:
         maq->queue_name_ = sQueueName;
         maq->func_ = func;
 
-        std::cerr << "adding active queue OK\n";
+        // std::cerr << "adding active queue OK\n";
 
         active_queue_details_[sQueueName] = maq;
         return BASE::AddActiveQueue(sQueueName, active_queue_delegate, maq);
@@ -516,7 +506,7 @@ PYBIND11_MODULE(pymoos, m) {
               "unified time. Of course, if your process isn't using MOOSComms"
               "at all, this function works just fine and returns the "
               "unadulterated time as you would expect.",
-              py::arg("apply_timewartping") = true);
+              py::arg("apply_timewarping") = true);
     m.def("is_little_end_in", &IsLittleEndian,
               "Return True if current machine is little end in.");
     m.def("set_moos_timewarp", &SetMOOSTimeWarp,
@@ -524,16 +514,4 @@ PYBIND11_MODULE(pymoos, m) {
               py::arg("warp"));
     m.def("get_moos_timewarp", &GetMOOSTimeWarp,
               "Return the current time warp factor.");
-
-    // TODO: double check that it's still needed
-    static py::exception<pyMOOSException> ex(m, "pyMOOSException");
-    py::register_exception_translator([](std::exception_ptr p) {
-        try {
-            if (p) std::rethrow_exception(p);
-        } catch (const pyMOOSException &e) {
-            // Set pyMOOSException as the active python error
-            // ex(e.what());
-            PyErr_SetString(PyExc_RuntimeError, e.what());
-        }
-    });
 }
