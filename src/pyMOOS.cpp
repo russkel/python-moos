@@ -18,14 +18,6 @@ PYBIND11_MAKE_OPAQUE(CommsStatusVector);
 
 namespace py = pybind11;
 
-class pyMOOSException : public std::exception {
-public:
-    explicit pyMOOSException(const char * m) : message{m} {}
-    virtual const char * what() const noexcept override {return message.c_str();}
-private:
-    std::string message = "";
-};
-
 namespace MOOS {
 
 /** this is a class which wraps MOOS::MOOSAsyncCommClient to provide
@@ -79,11 +71,11 @@ public:
         bool bResult = false;
 
         Py_BEGIN_ALLOW_THREADS
-        // PyGILState_STATE gstate = PyGILState_Ensure();
+        // py::gil_scoped_acquire acquire;
         closing_ = true;
         bResult = BASE::Close(true);
 
-        // PyGILState_Release(gstate);
+        // py::gil_scoped_release release;
         Py_END_ALLOW_THREADS
 
         return bResult;
@@ -94,17 +86,16 @@ public:
 
         bool bResult = false;
 
-        PyGILState_STATE gstate = PyGILState_Ensure();
+        py::gil_scoped_acquire acquire;
         try {
             py::object result = on_connect_object_();
             bResult = py::bool_(result);
         } catch (const py::error_already_set& e) {
-            PyGILState_Release(gstate);
-            throw pyMOOSException(
-                  "OnConnect:: caught an exception thrown in python callback");
+            py::gil_scoped_release release;
+            throw;
         }
 
-        PyGILState_Release(gstate);
+        py::gil_scoped_release release;
 
         return bResult;
 
@@ -125,19 +116,18 @@ public:
     bool on_mail() {
         bool bResult = false;
 
-        PyGILState_STATE gstate = PyGILState_Ensure();
+        py::gil_scoped_acquire acquire;
         try {
             if(!closing_){
                 py::object result = on_mail_object_();
                 bResult = py::bool_(result);
             }
         } catch (const py::error_already_set& e) {
-            PyGILState_Release(gstate);
-            throw pyMOOSException(
-                      "OnMail:: caught an exception thrown in python callback");
+            py::gil_scoped_release release;
+            throw;
         }
 
-        PyGILState_Release(gstate);
+        py::gil_scoped_release release;
 
         return bResult;
     }
@@ -158,18 +148,16 @@ public:
         }
 
         bool bResult = false;
+        py::gil_scoped_acquire acquire;
 
-        PyGILState_STATE gstate = PyGILState_Ensure();
         try {
             py::object result = q->second->func_(M);
             bResult = py::bool_(result);
         } catch (const py::error_already_set& e) {
-            PyGILState_Release(gstate);
-            throw pyMOOSException(
-                "ActiveQueue:: caught an exception thrown in python callback");
+            py::print("ActiveQueue:: caught an exception thrown in python callback");
+            py::gil_scoped_release release;
+            throw;
         }
-
-        PyGILState_Release(gstate);
 
         return bResult;
 
@@ -184,7 +172,7 @@ public:
         maq->queue_name_ = sQueueName;
         maq->func_ = func;
 
-        std::cerr << "adding active queue OK\n";
+        // std::cerr << "adding active queue OK\n";
 
         active_queue_details_[sQueueName] = maq;
         return BASE::AddActiveQueue(sQueueName, active_queue_delegate, maq);
@@ -518,7 +506,7 @@ PYBIND11_MODULE(pymoos, m) {
               "unified time. Of course, if your process isn't using MOOSComms"
               "at all, this function works just fine and returns the "
               "unadulterated time as you would expect.",
-              py::arg("apply_timewartping") = true);
+              py::arg("apply_timewarping") = true);
     m.def("is_little_end_in", &IsLittleEndian,
               "Return True if current machine is little end in.");
     m.def("set_moos_timewarp", &SetMOOSTimeWarp,
@@ -526,16 +514,4 @@ PYBIND11_MODULE(pymoos, m) {
               py::arg("warp"));
     m.def("get_moos_timewarp", &GetMOOSTimeWarp,
               "Return the current time warp factor.");
-
-    // TODO: double check that it's still needed
-    static py::exception<pyMOOSException> ex(m, "pyMOOSException");
-    py::register_exception_translator([](std::exception_ptr p) {
-        try {
-            if (p) std::rethrow_exception(p);
-        } catch (const pyMOOSException &e) {
-            // Set pyMOOSException as the active python error
-            // ex(e.what());
-            PyErr_SetString(PyExc_RuntimeError, e.what());
-        }
-    });
 }

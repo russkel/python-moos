@@ -56,7 +56,7 @@ jobs:
         platforms: all
 
     - name: Install cibuildwheel
-      run: python -m pip install cibuildwheel==1.8.0
+      run: python -m pip install cibuildwheel==1.10.0
 
     - name: Checkout MOOS source
       uses: actions/checkout@v2
@@ -108,6 +108,7 @@ jobs:
         CIBW_MANYLINUX_I686_IMAGE: manylinux2014
         CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
         CIBW_ARCHS_LINUX: "auto aarch64"
+        CIBW_BUILD: cp39-manylinux_x86_64
         CIBW_SKIP: cp27-*
         CIBW_BEFORE_ALL: |
           mkdir moosbuild;
@@ -153,7 +154,7 @@ jobs:
   #   - uses: actions/setup-python@v2
 
   #   - name: Install cibuildwheel
-  #     run: python -m pip install cibuildwheel==1.6.3
+  #     run: python -m pip install cibuildwheel==1.10.0
 
   #   - uses: ilammy/msvc-dev-cmd@v1
 
