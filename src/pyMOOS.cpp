@@ -164,8 +164,8 @@ public:
             py::object result = q->second->func_(M);
             bResult = py::bool_(result);
         } catch (const py::error_already_set& e) {
-            py::gil_scoped_release release;
             py::print("ActiveQueue:: caught an exception thrown in python callback");
+            py::gil_scoped_release release;
             throw;
         }
 
